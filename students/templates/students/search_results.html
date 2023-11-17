@@ -1,0 +1,98 @@
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+            <th scope="col"><a href="?sort_by=student_number">Student Number</a></th>
+            <th scope="col"><a href="?sort_by=first_name">Name</a></th>
+            <th scope="col"><a href="?sort_by=address">Address</a></th>
+            <th scope="col"><a href="?sort_by=form">Form</a></th>
+            <th scope="col"><a href="?sort_by=paidFees">Paid Fees</a></th>
+            <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for student in students %}
+          <tr>
+            <td>{{ student.student_number }}</td>
+            <td>{{ student.first_name }} {{ student.last_name }}</td>
+            <td>{{ student.address }}</td>
+            <td>{{ student.form }}</td>
+            <td>{{ student.paidFees }}</td>
+            <td>
+                <button type="button" class="btn btn-outline-primary me-1" href="{% url 'view_student' student.id %}" data-toggle="modal" data-target="#myModal{{student.id}}">
+                  <i class="fa-regular fa-eye fa-lg"></i>
+                </button>
+                 
+                <!--View Modal-->
+                <div class="modal" id="myModal{{student.id}}" name="myModal{{student.id}}" tabindex="-1" aria-labelledby="myModalLabel1" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">{{student.first_name}} {{student.last_name}}'s Details</h5>
+                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true"></span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="list-group">
+                          <a href="#" class="list-group-item list-group-item-action">{{student.student_number}}</a>
+                          <a href="#" class="list-group-item list-group-item-action">{{student.address}}</a>
+                          <a href="#" class="list-group-item list-group-item-action">{{student.form}}</a>
+                          <a href="#" class="list-group-item list-group-item-action">{{student.paidFees}}</a>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <a class="btn btn-outline-primary me-1" href="{% url 'edit' student.id %}">
+                  <i class="fa-solid fa-user-pen fa-lg"></i>
+                </a>
+              </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="6">No results found</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+    </table>
+    <div>
+        <ul class="pagination pagination-lg">
+            {% if students.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1">« FIRST</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#">«</a>
+                </li>
+            {% endif %}
+    
+            {% for i in students.paginator.page_range %}
+                {% if students.number == i %}
+                    <li class="page-item active">
+                        <a class="page-link" href="#">{{ i }}</a>
+                    </li>
+                {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+    
+            {% if students.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ students.paginator.num_pages }}">LAST »</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#">END</a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,48 @@
+{% extends "students/base.html" %}
+
+{% block body %}
+    {% if form.errors %}
+    <div class="alert alert-dismissible alert-danger">
+        <a href="{% url 'add' %}">
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </a>
+        Error:
+        <ul>
+            {% for field in form.errors %}
+                {% if field == 'student_number' %}
+                    <li><strong>Student number already exists.</strong></li>
+                {% else %}
+                    <li>{{ field.errors.0 }}</li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    {% if success %}
+        <div class="alert alert-dismissible alert-success">
+            <a href="{% url 'add' %}">
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </a>
+            <strong>Student Added Successfully</strong> <a href="{% url 'index' %}" class="alert-link">[Back To HomePage]</a> <a href="{% url 'add' %}" class="alert-link">[Add Another]</a>.
+        </div>
+    {% else %}
+        <div class="row justify-content-center">
+            <div class="col-10 col-sm-6">
+                <div class="card bg-light mb-3">
+                    <div class="card-header">
+                        <i class="fa-solid fa-user-plus fa-lg"></i> Student Registration
+                    </div>
+                    <div class="card-body">
+                      <form action="{% url 'add' %}" method="POST">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-primary">Add</button>
+                        <a href="{% url 'index' %}" class="btn btn-secondary">Cancel</a>
+                      </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
